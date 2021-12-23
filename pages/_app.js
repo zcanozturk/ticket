@@ -1,7 +1,12 @@
-import '../styles/globals.css'
+import "antd/dist/antd.css";
+import MyLayout from "../component/myLayout";
 
-function MyApp({ Component, pageProps }) {
-  return <Component {...pageProps} />
+import "../styles/mycss.css";
+
+export default function MyApp({ Component, pageProps }) {
+  return (
+    <MyLayout>
+      <Component {...pageProps} />
+    </MyLayout>
+  );
 }
-
-export default MyApp
