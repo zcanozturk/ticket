@@ -1,0 +1,22 @@
+{
+  "ticket": [
+    {
+      "name": "sarah",
+      "title": "My TV is broken ",
+      "description": " I received my TV last week,and it arrived with a broken screen. Can I get it replaced? ",
+      "isAnswered": true
+    },
+    {
+      "name": "matt",
+      "title": "Payment failed? ",
+      "description": " When I tried to make the payment, I kept getting the same message “Your payment failed” ",
+      "isAnswered": true
+    },
+    {
+      "name": "emily",
+      "title": "email address change",
+      "description": "i need to update my email adress",
+      "isAnswered": false
+    }
+  ]
+}

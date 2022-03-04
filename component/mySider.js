@@ -2,10 +2,9 @@ import { Layout, Menu, Button } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 import Link from "next/link";
 
-const {Sider } = Layout;
+const { Sider } = Layout;
 
-function MySider({ children }) {
-  
+function MySider({}) {
   return (
     <Sider
       style={{
@@ -13,17 +12,18 @@ function MySider({ children }) {
         height: "100vh",
         position: "fixed",
         left: 0,
+        top: 0,
       }}
     >
-      <Button type="primary" className="newtick">
-      <Link href='/newTicket'> + New Ticket</Link>
+      <Button type="primary" className="m-10">
+        <Link href="/newTicket"> + New Ticket</Link>
       </Button>
-      <Menu theme="dark" mode="inline" defaultSelectedKeys={["4"]}>
+      <Menu theme="dark" mode="inline" className="">
         <Menu.Item key="1" icon={<UserOutlined />}>
-          <Link href='/'>all tickets</Link>
+          <Link href="/">all tickets</Link>
         </Menu.Item>
         <Menu.Item key="2" icon={<UserOutlined />}>
-        <Link href='/admin'>admin</Link>
+          <Link href="/admin">admin</Link>
         </Menu.Item>
       </Menu>
     </Sider>

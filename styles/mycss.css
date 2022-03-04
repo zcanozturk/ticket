@@ -1,26 +1,6 @@
-.newtick{
-    height: 32px;
-    margin: 16px;
-    background: rgba(144, 52, 52, 0.2);}
-.header{
-    background-color: grey;
-}
-.site-layout-content {
-    min-height: 280px;
-    padding: '30px' ;
-    background: #fff;
-    margin-left: 200px;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-.Card{
-    margin: 20px;
-    box-shadow: 10px 10px 5px grey;    
-}
-.form{
-    margin: 20px;
-}
 
-.item{
-    width: 40%;
-    margin-right: 10%;
-}
+
