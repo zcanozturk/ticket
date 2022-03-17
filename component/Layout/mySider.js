@@ -7,6 +7,7 @@ const { Sider } = Layout;
 function MySider({}) {
   return (
     <Sider
+    className="bg-green"
       style={{
         overflow: "auto",
         height: "100vh",
@@ -18,7 +19,7 @@ function MySider({}) {
       <Button type="primary" className="m-10">
         <Link href="/newTicket"> + New Ticket</Link>
       </Button>
-      <Menu theme="dark" mode="inline" className="">
+      <Menu  theme="dark" mode="inline" className="">
         <Menu.Item key="1" icon={<UserOutlined />}>
           <Link href="/">all tickets</Link>
         </Menu.Item>

@@ -1,28 +1,45 @@
 import { useRouter } from "next/router";
-import { getAllTickets } from "../../helpers/api-util";
+import { useState } from "react";
+import Ticket from "../../component/Ticket";
+import {
+  getAllTickets,
+  getAnswerById,
+  getReplies,
+  getTicketByName,
+  getTicketIdByName,
+  getTypes,
+} from "../../helpers/api-util";
 
-
-function TicketPage(props){
-    const router = useRouter();
-    const sarah = router.query.slug
-    console.log(router.query.slug)
-
-    return(
-        <div className="m-10 ml-64 h-screen">
-            {props.ticket[sarah].description}
-        </div>
-    )
-
+function TicketPage(props) {
+  const ticketid = props.ticketid;
+  const replies = props.replies;
+  const alltickets = props.alltickets;
+  const answer = props.answer;
+  const ticket = props.ticket;
+  const types = props.types;
+  return (
+    <div className="">
+      <Ticket ticket={props} />
+    </div>
+  );
 }
 
 export async function getServerSideProps(context) {
-  // const filePath = path.join(process.cwd(), "data", "backend.json");
-  // const Jsondata = await fs.readFile(filePath);
-  // const data = JSON.parse(Jsondata);
-  const data = await getAllTickets();
+  const a = context.params.slug[0];
+  const alltickets = await getAllTickets();
+  const replies = await getReplies();
+  const ticketid = await getTicketIdByName(a);
+  const ticket = await getTicketByName(a, alltickets);
+  const answer = ticket.isAnswered ? await getAnswerById(ticketid) : null;
+  const types = await getTypes();
   return {
     props: {
-      ticket: data,
+      ticket: ticket,
+      answer: answer,
+      ticketid: ticketid,
+      alltickets: alltickets,
+      replies: replies,
+      types: types,
     },
   };
 }

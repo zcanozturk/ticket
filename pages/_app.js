@@ -1,5 +1,6 @@
 import "antd/dist/antd.css";
-import MyLayout from "../component/myLayout";
+import MyLayout from "../component/Layout/myLayout";
+
 
 import "../styles/mycss.css";
 

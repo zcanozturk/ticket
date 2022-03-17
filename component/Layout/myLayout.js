@@ -1,6 +1,6 @@
 import { Layout,} from "antd";
 import { useRouter } from "next/router";
-import MySider from "../component/mySider";
+import MySider from "./mySider";
 const { Header, Content, } = Layout;
 
 const outs = ["/login", '/register', '/logreg'];

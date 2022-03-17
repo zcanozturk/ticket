@@ -1,60 +1,72 @@
-import { Table } from "antd";
-import { useRouter } from "next/router";
-import { getAllTickets } from "../helpers/api-util";
+import TicketList from "../component/List/TicketList";
+import { getAllTickets, getTypes } from "../helpers/api-util";
+import { Input, Select } from "antd";
+import { useEffect, useState } from "react";
+import CardList from "../component/List/CardList";
+const { Option } = Select;
+
+const { Search } = Input;
 
 export default function Page(props) {
-  const router = useRouter();
+  const [arr, setArr] = useState(props.tickets);
+  const [view, setView] = useState("Card");
+  function tiklent(e) {
+    const ar = [...props.tickets];
+    const filteredname = ar.filter((ticket) =>
+      ticket.name.toLowerCase().includes(e.target.value.toLowerCase())
+    );
+    const filteredtitle = ar.filter((ticket) =>
+      ticket.title.toLowerCase().includes(e.target.value.toLowerCase())
+    );
 
-  const arr = props.ticket;
-
-  const columns = [
-    {
-      title: "Name",
-      dataIndex: "name",
-      key: "namek",
-      sorter: (a, b) => a.name.length - b.name.length,
-      sortDirections: ["descend"],
-    },
-    {
-      title: "Title",
-      dataIndex: "title",
-      key: "titlek",
-    },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "descriptionk",
-    },
-  ];
-
+    const array3 = filteredname.concat(filteredtitle);
+    array3 = array3.filter((item, index) => {
+      return array3.indexOf(item) == index;
+    });
+    console.log(array3);
+    setArr(array3);
+  }
+  function changeView(val) {
+    setView(val);
+  }
   return (
-    <div className="ml-52 m-10 h-screen">
-      <Table
-        dataSource={arr}
-        columns={columns}
-        rowKey="name"
-        onRow={(record, rowindex) => {
-          return {
-            onClick: (e) => {
-              e.preventDefault();
-              const fullPath = `/tickets/${rowindex}`;
+    <div className="">
+      <div className="ml-64 m-10 flex  ">
+        <div className="">
+          <Search onChange={tiklent} placeholder="search ticket"></Search>
+        </div>
 
-              router.push(fullPath);
-            },
-          };
-        }}
-      />
+        <div>
+          <Select
+            onChange={changeView}
+            placeholder="view Select"
+            className="ml-20 w-40"
+          >
+            <Option value="Card"> Card - View</Option>
+            <Option value="Table"> Table - View</Option>
+          </Select>
+        </div>
+      </div>
+      <div>
+        {view === "Table" ? (
+          <TicketList data={arr} types={props.types} />
+        ) : (
+          <div className="ml-64 m-10"  >
+            <CardList data={arr} types={props.types}></CardList>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
 
-export async function getStaticProps(context) {
- 
-  const data = await getAllTickets()
-
+export async function getServerSideProps(context) {
+  const data = await getAllTickets();
+  const types = await getTypes();
   return {
     props: {
-      ticket: data,
+      tickets: data,
+      types: types,
     },
   };
 }
