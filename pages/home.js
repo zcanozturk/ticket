@@ -1,28 +1,27 @@
 import TicketList from "../components/List/TicketList";
-import { getNotAnswered } from "../helpers/api-util";
+import { getAllTickets } from "../helpers/getAllTickets";
 import { getTypes } from "../helpers/getTypes.js";
-import { Input, Select } from "antd";
-import { useState,useEffect } from "react";
+import { Input, Select, Spin } from "antd";
+import { useEffect, useState } from "react";
 import CardList from "../components/List/CardList";
+
 const { Option } = Select;
 
 const { Search } = Input;
 
-
-function Admin(props) {
+export default function Page(props) {
   const [arr, setArr] = useState(props.tickets);
-  const [view, setView] = useState("Card");
+  const [view, setView] = useState();
 
   useEffect(() => {
     const user = localStorage.getItem("user");
-
     const filteredData = props.tickets.filter((ticket) => ticket.uid == user);
 
     setArr(filteredData);
   }, [props]);
 
   function tiklent(e) {
-    const ar = [...props.tickets];
+    const ar = [...arr];
     const filteredname = ar.filter((ticket) =>
       ticket.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
@@ -34,14 +33,15 @@ function Admin(props) {
     array3 = array3.filter((item, index) => {
       return array3.indexOf(item) == index;
     });
-    console.log(array3);
     setArr(array3);
   }
+
   function changeView(val) {
     setView(val);
   }
+
   return (
-    <div className="m-10 flex-col space-y-4">
+    <div className="m-10 flex-col space-y-4 ">
       <div className=" flex justify-between ">
         <div className="">
           <Search onChange={tiklent} placeholder="search ticket"></Search>
@@ -62,8 +62,8 @@ function Admin(props) {
         {view === "Table" ? (
           <TicketList data={arr} types={props.types} />
         ) : (
-          <div className=""  >
-            <CardList data={arr} types={props.types}></CardList>
+          <div className="">
+            <CardList data={arr} types={props.types} />
           </div>
         )}
       </div>
@@ -71,10 +71,9 @@ function Admin(props) {
   );
 }
 
-export async function getServerSideProps() {
-  const data = await getNotAnswered();
+export async function getServerSideProps(context) {
+  const data = await getAllTickets();
   const types = await getTypes();
-
   return {
     props: {
       tickets: data,
@@ -82,5 +81,3 @@ export async function getServerSideProps() {
     },
   };
 }
-
-export default Admin;

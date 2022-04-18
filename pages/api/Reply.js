@@ -3,12 +3,16 @@ import { replyAnswer, UpdateAnswered } from "../../helpers/api-util";
 
 async function handler(req,res){
     if (req.method === "POST") {
-        const reply = req.body.reply;
-        const ticketid = req.body.ticketid;
-       
+      const body = {
+        reply: req.body.reply,
+        ticketId: req.body.ticketid,
+        uid: req.body.uid,
+        replytime : new Date()
+      };
         
-        const post = await replyAnswer(reply,ticketid);
-        const updatepost = await UpdateAnswered(ticketid);
+        const post = await replyAnswer(body);
+        const updatepost = await UpdateAnswered(body.ticketId);
+        
         if(post.id !== null){
           res.status(200).json({ message: "works! ", });
         }

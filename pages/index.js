@@ -1,72 +1,119 @@
-import TicketList from "../component/List/TicketList";
-import { getAllTickets, getTypes } from "../helpers/api-util";
-import { Input, Select } from "antd";
-import { useEffect, useState } from "react";
-import CardList from "../component/List/CardList";
-const { Option } = Select;
+import { Button, Form, Input, Layout } from "antd";
+import { useState } from "react";
+import { useRouter } from "next/router";
+import app from '../firebase/initializeFirebase'
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 
-const { Search } = Input;
 
-export default function Page(props) {
-  const [arr, setArr] = useState(props.tickets);
-  const [view, setView] = useState("Card");
-  function tiklent(e) {
-    const ar = [...props.tickets];
-    const filteredname = ar.filter((ticket) =>
-      ticket.name.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-    const filteredtitle = ar.filter((ticket) =>
-      ticket.title.toLowerCase().includes(e.target.value.toLowerCase())
-    );
+function LogReg() {
+  const [login, setLogin] = useState(true);
+  const [uid, setUid] = useState();
+  const router = useRouter();
 
-    const array3 = filteredname.concat(filteredtitle);
-    array3 = array3.filter((item, index) => {
-      return array3.indexOf(item) == index;
-    });
-    console.log(array3);
-    setArr(array3);
+  function loginHandler() {
+    if (login) {
+      setLogin(false);
+    } else {
+      setLogin(true);
+    }
   }
-  function changeView(val) {
-    setView(val);
-  }
+  const onFinish = (values) => {
+    const enteredemail = values.email;
+    const enteredpassword = values.password;
+    const enteredname = values.name;
+
+    const reqbody = {
+      name: enteredname,
+      mail: enteredemail,
+      password: enteredpassword,
+    };
+    if (login) {
+      const auth = getAuth(app)
+      signInWithEmailAndPassword(auth, reqbody.mail, reqbody.password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          localStorage.setItem('user',user.uid)
+
+          router.push('/home')
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+        });
+    } else {
+      fetch("/api/signup", {
+        method: "POST",
+        body: JSON.stringify(reqbody),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    }
+  };
   return (
-    <div className="">
-      <div className="ml-64 m-10 flex  ">
-        <div className="">
-          <Search onChange={tiklent} placeholder="search ticket"></Search>
-        </div>
-
-        <div>
-          <Select
-            onChange={changeView}
-            placeholder="view Select"
-            className="ml-20 w-40"
-          >
-            <Option value="Card"> Card - View</Option>
-            <Option value="Table"> Table - View</Option>
-          </Select>
-        </div>
-      </div>
-      <div>
-        {view === "Table" ? (
-          <TicketList data={arr} types={props.types} />
-        ) : (
-          <div className="ml-64 m-10"  >
-            <CardList data={arr} types={props.types}></CardList>
+    <div className=" bg-gray-200">
+      <div className="flex justify-center items-center h-screen bg-gray-600">
+        <div className="max-w-md w-full bg-gray-900 rounded p-6 space-y-4">
+          <div className="mb-4">
+            <p className="text-gray-400">{login ? "Login" : "Signup"}</p>
+            <h2 className="text-xl font-bold text-white">Ticket System</h2>
           </div>
-        )}
+          <Form className="space-y-4" name="basic" onFinish={onFinish}>
+            {login ? (
+              <></>
+            ) : (
+              <Form.Item name="name">
+                <Input
+                  placeholder="Name"
+                  className="w-full p-4 text-sm bg-gray-50 focus:outline-none border border-gray-200 rounded text-gray-600"
+                />
+              </Form.Item>
+            )}
+            <Form.Item name="email">
+              <Input
+                name="email"
+                placeholder="Email"
+                className="w-full p-4 text-sm bg-gray-50 focus:outline-none border border-gray-200 rounded text-gray-600"
+              />
+            </Form.Item>
+            <Form.Item name="password">
+              <Input
+                name="password"
+                placeholder="Password"
+                className="w-full p-4 text-sm bg-gray-50 focus:outline-none border border-gray-200 rounded text-gray-600"
+              />
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType="submit" type="primary" className="w-1/2">
+                {login ? "Login" : "Signup"}
+              </Button>
+            </Form.Item>
+          </Form>
+          <div>
+            {login ? (
+              <Button
+                type="link"
+                className="text-gray-600"
+                onClick={loginHandler}
+              >
+                {" "}
+                Create User
+              </Button>
+            ) : (
+              <Button
+                type="link"
+                className="text-gray-600"
+                onClick={loginHandler}
+              >
+                {" "}
+                Login
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );
 }
 
-export async function getServerSideProps(context) {
-  const data = await getAllTickets();
-  const types = await getTypes();
-  return {
-    props: {
-      tickets: data,
-      types: types,
-    },
-  };
-}
+export default LogReg;

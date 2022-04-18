@@ -2,5 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
+.ck-editor__editable_inline {
+    min-height: 150px !important;
+}

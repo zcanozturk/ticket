@@ -1,13 +1,13 @@
 import { useRouter } from "next/router";
 import { useState } from "react";
-import Ticket from "../../component/Ticket";
+import Ticket from "../../components/Ticket/Ticket";
+import {getAllTickets} from "../../helpers/getAllTickets"
+import { getTypes } from "../../helpers/getTypes";
 import {
-  getAllTickets,
   getAnswerById,
   getReplies,
   getTicketByName,
   getTicketIdByName,
-  getTypes,
 } from "../../helpers/api-util";
 
 function TicketPage(props) {
@@ -18,8 +18,11 @@ function TicketPage(props) {
   const ticket = props.ticket;
   const types = props.types;
   return (
-    <div className="">
+    <div className="m-10">
+      <div>
       <Ticket ticket={props} />
+
+      </div>
     </div>
   );
 }

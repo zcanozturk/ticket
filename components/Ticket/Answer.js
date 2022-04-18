@@ -1,8 +1,11 @@
+import ReactHtmlParser from 'react-html-parser'; 
+
+
 function Answer(props){
     const {answer} = props;
     return(
         <div>
-            {answer}
+            {ReactHtmlParser(answer)}
         </div>
     )
 }

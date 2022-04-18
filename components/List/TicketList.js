@@ -47,11 +47,7 @@ function TicketList(props) {
       dataIndex: "title",
       key: "titlek",
     },
-    {
-      title: "Description",
-      dataIndex: "description",
-      key: "descriptionk",
-    },
+    
     {
       title: "Type",
       dataIndex: "typeid",
@@ -59,11 +55,11 @@ function TicketList(props) {
       render: (text)=> convertTypename(text)
     }
   ];
-
+  
   return loading ? (
-    <Spin  className="ml-64 "/>
+    <Spin  className=""/>
   ) : (
-    <div className="m-10 ml-64 h-screen">
+    <div className="">
       <Table
         dataSource={arr}
         columns={columns}
@@ -72,6 +68,7 @@ function TicketList(props) {
           return {
             onClick: () => {
               const fullPath = `/tickets/${record.name}`;
+
               router.push(fullPath);
             },
           };
